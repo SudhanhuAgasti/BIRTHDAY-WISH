@@ -991,6 +991,25 @@ body {
 
 /* --- Floating Music Player --- */
 .music-player {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: auto;
+    background: rgba(255, 248, 243, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--neu-shadow-raised);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1000;
+    transition: var(--transition-smooth);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.music-player.hidden {
     display: none !important;
 }
 
@@ -1046,7 +1065,9 @@ body {
 }
 
 .player-controls {
-    display: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .player-btn {

@@ -104,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const mainContent = document.getElementById("main-content");
     const navBar = document.querySelector(".nav-bar");
     const audio = document.getElementById("love-song");
+    const musicPlayer = document.getElementById("music-player");
     
     const candle = document.querySelector(".candle");
     const flame = document.getElementById("candle-flame");
@@ -143,6 +144,9 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             openingScreen.classList.add("fade-out");
             mainContent.classList.remove("hidden");
+            if (musicPlayer) {
+                musicPlayer.classList.remove("hidden");
+            }
             
             setTimeout(() => {
                 navBar.classList.add("visible");
@@ -190,6 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
         candle.addEventListener("click", blowOutCandle);
         candle.addEventListener("touchstart", blowOutCandle);
         initMicrophoneBlowDetection();
+    }
+
+    // Fallback: click/tap anywhere on the opening screen to blow the candle and open
+    if (openingScreen) {
+        openingScreen.addEventListener("click", blowOutCandle);
+        openingScreen.addEventListener("touchstart", blowOutCandle);
     }
 
     function initMicrophoneBlowDetection() {
