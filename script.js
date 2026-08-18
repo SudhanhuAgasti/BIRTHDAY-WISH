@@ -186,24 +186,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { once: true });
 
     if (candle) {
+        // Always enable tap/touch fallback from the start so she can always proceed
+        candle.addEventListener("click", blowOutCandle);
+        candle.addEventListener("touchstart", blowOutCandle);
         initMicrophoneBlowDetection();
     }
 
     function initMicrophoneBlowDetection() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             console.log("Microphone API not supported. Fallback to tap active.");
+            actionTitle.innerHTML = "Tap the flame to blow it out & make a wish... 🕯️✨";
             return;
         }
 
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
-                // Update instruction text to guide her to blow!
-                actionTitle.innerHTML = "Blow into your mic to blow out the candle & make a wish... 🕯️💨";
+                // Update instruction text to guide her to blow, mentioning tap fallback
+                actionTitle.innerHTML = "Blow into your mic to blow out the candle or tap the flame... 🕯️💨";
                 
                 // Show encouragement instruction if blowing doesn't succeed in 6 seconds
                 encouragementTimer = setTimeout(() => {
                     if (!isSurpriseOpened) {
-                        actionTitle.innerHTML = "Try blowing a bit harder closer to the mic! 🕯️💨";
+                        actionTitle.innerHTML = "Try blowing a bit harder, or just tap the flame to blow it out! 🕯️✨";
                     }
                 }, 6000);
                 
@@ -217,11 +221,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 mediaStream.connect(analyser);
 
+                // Auto-resume AudioContext on user interaction to fix mobile browser suspension
+                const resumeAudioContext = () => {
+                    if (audioContext.state === "suspended") {
+                        audioContext.resume();
+                    }
+                };
+                document.addEventListener("click", resumeAudioContext, { passive: true });
+                document.addEventListener("touchstart", resumeAudioContext, { passive: true });
+
                 const detectBlow = () => {
                     if (isSurpriseOpened) {
-                        // Close stream and context to release microphone
+                        // Close stream and context to release microphone and clean up listeners
                         stream.getTracks().forEach(track => track.stop());
                         audioContext.close();
+                        document.removeEventListener("click", resumeAudioContext);
+                        document.removeEventListener("touchstart", resumeAudioContext);
                         return;
                     }
 
@@ -247,7 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(err => {
                 console.log("Microphone permission denied or unavailable. Activating safety tap fallback.");
                 actionTitle.innerHTML = "Tap the flame to blow it out & make a wish... 🕯️✨";
-                candle.addEventListener("click", blowOutCandle);
             });
     }
 
