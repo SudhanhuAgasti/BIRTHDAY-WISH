@@ -577,7 +577,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // --------------------------------------------------
     // 8. FLOATING MUSIC PLAYER ENGINE
     // --------------------------------------------------
-    const musicPlayer = document.getElementById("music-player");
+    // musicPlayer is already defined at the top
     const playerSongTitle = document.getElementById("player-song-title");
     const playerSongArtist = document.getElementById("player-song-artist");
     const btnPlayPause = document.getElementById("btn-play-pause");
