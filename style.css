@@ -1712,5 +1712,32 @@ body {
     .scroll-down {
         margin-top: 36px;
     }
+
+    /* 3. Gallery Grid Mobile adaptation */
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        padding: 0 16px;
+    }
+
+    .photo-card {
+        max-width: 340px;
+        margin: 0 auto;
+    }
+
+    /* 4. Love Letter Section Mobile adaptation */
+    .letter-card {
+        padding: 32px 20px;
+    }
+
+    .letter-stamp {
+        top: 20px;
+        right: 20px;
+        font-size: 1.6rem;
+    }
+
+    .letter-body {
+        text-align: left;
+    }
 }
 
