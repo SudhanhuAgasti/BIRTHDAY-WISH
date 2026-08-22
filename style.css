@@ -1739,5 +1739,57 @@ body {
     .letter-body {
         text-align: left;
     }
+
+    /* 5. Reasons Grid Mobile adaptation */
+    .reasons-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    /* 6. Timeline Mobile adaptation */
+    .timeline-container::before {
+        left: 24px;
+    }
+
+    .timeline-item {
+        width: 100%;
+        left: 0 !important;
+        padding-left: 54px;
+        padding-right: 16px;
+        text-align: left !important;
+    }
+
+    .timeline-dot {
+        left: 14px !important;
+        right: auto !important;
+    }
+
+    /* 7. Wishes Grid Mobile adaptation */
+    .wishes-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    /* 8. Music Player Mobile adaptation */
+    .music-player {
+        bottom: 16px;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 400px;
+        justify-content: space-between;
+    }
 }
+
+@media (max-width: 480px) {
+    .reasons-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .player-volume-container {
+        display: none;
+    }
+}
+
 
