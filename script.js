@@ -22,7 +22,7 @@ const loveConfig = {
 
     // Gallery Photo Captions (Corresponds to photo1.jpg to photo6.jpg)
     photos: [
-        { url: "images/photo1.jpg", caption: "# BE THE REASON OF UR OWN HAPPINESS... and mine ❤️" },
+        { url: "images/photo1.jpg", caption: "Be the reason of own happiness ❤️ " },
         { url: "images/photo2.jpg", caption: "Every moment with you is a favorite memory 🥰" },
         { url: "images/photo3.jpg", caption: "Your smile makes every day a new chance to find happiness ☀️" },
         { url: "images/photo4.jpg", caption: "Under blue skies or dark nights, I'm always happiest next to you 🌎" },
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const navBar = document.querySelector(".nav-bar");
     const audio = document.getElementById("love-song");
     const musicPlayer = document.getElementById("music-player");
-    
+
     const candle = document.querySelector(".candle");
     const flame = document.getElementById("candle-flame");
     const actionTitle = document.getElementById("opening-action-title");
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const candleRect = candle.getBoundingClientRect();
         const wickX = candleRect.left + candleRect.width / 2;
         const wickY = candleRect.top + 20;
-        
+
         for (let i = 0; i < 6; i++) {
             setTimeout(() => {
                 createSmoke(wickX, wickY);
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (musicPlayer) {
                 musicPlayer.classList.remove("hidden");
             }
-            
+
             setTimeout(() => {
                 navBar.classList.add("visible");
                 window.dispatchEvent(new Event('scroll'));
@@ -213,22 +213,22 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(stream => {
                 // Update instruction text to guide her to blow, mentioning tap fallback
                 actionTitle.innerHTML = "Blow into your mic to blow out the candle or tap the flame... 🕯️💨";
-                
+
                 // Show encouragement instruction if blowing doesn't succeed in 6 seconds
                 encouragementTimer = setTimeout(() => {
                     if (!isSurpriseOpened) {
                         actionTitle.innerHTML = "Try blowing a bit harder, or just tap the flame to blow it out! 🕯️✨";
                     }
                 }, 6000);
-                
+
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const analyser = audioContext.createAnalyser();
                 const mediaStream = audioContext.createMediaStreamSource(stream);
-                
+
                 analyser.fftSize = 512;
                 const bufferLength = analyser.frequencyBinCount;
                 const dataArray = new Uint8Array(bufferLength);
-                
+
                 mediaStream.connect(analyser);
 
                 // Auto-resume AudioContext on user interaction to fix mobile browser suspension
@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
                     analyser.getByteFrequencyData(dataArray);
-                    
+
                     // Sum frequency amplitude to detect breath/blowing sound
                     let freqSum = 0;
                     for (let i = 0; i < bufferLength; i++) {
@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="reason-text">${reason.text}</p>
             `;
             reasonsGrid.appendChild(card);
-            
+
             // Apply 3D Tilt
             apply3DTilt(card, 12);
         });
@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const rotY = (normX * maxAngle).toFixed(2);
 
             const randomRot = element.style.getPropertyValue('--random-rotation') || "0deg";
-            
+
             if (element.classList.contains("photo-card")) {
                 element.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.06, 1.06, 1.06) rotate(0deg)`;
                 element.style.zIndex = "50";
@@ -721,7 +721,7 @@ document.addEventListener("DOMContentLoaded", () => {
             this.speedY = Math.random() * 0.6 + 0.3; // gentle upward drift
             this.speedX = Math.random() * 0.4 - 0.2; // slight side sway
             this.opacity = Math.random() * 0.4 + 0.15; // translucent overlay feel
-            
+
             // Theme colors for balloons (shades of rose, lavender, and gold matching our palette)
             const colors = [
                 `rgba(233, 139, 168, ${this.opacity})`, // rose pink
@@ -744,7 +744,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         draw() {
             ctx.save();
-            
+
             // 1. Draw Balloon Main Body (Egg Ellipse Shape)
             ctx.beginPath();
             ctx.ellipse(this.x, this.y, this.size * 0.85, this.size * 1.15, 0, 0, Math.PI * 2);
@@ -764,15 +764,15 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.beginPath();
             ctx.moveTo(this.x, this.y + this.size * 1.38);
             ctx.quadraticCurveTo(
-                this.x - this.size * 0.25, 
-                this.y + this.size * 2.0, 
-                this.x, 
+                this.x - this.size * 0.25,
+                this.y + this.size * 2.0,
+                this.x,
                 this.y + this.size * 2.8
             );
             ctx.strokeStyle = `rgba(50, 27, 47, ${this.opacity * 0.25})`; // very light string matching text theme
             ctx.lineWidth = 0.8;
             ctx.stroke();
-            
+
             ctx.restore();
         }
     }
@@ -791,7 +791,7 @@ document.addEventListener("DOMContentLoaded", () => {
             this.speedY = Math.random() * 0.9 + 0.6; // gentle falling drift
             this.speedX = Math.random() * 0.5 - 0.25;
             this.opacity = Math.random() * 0.5 + 0.35;
-            
+
             this.oscillationSpeed = Math.random() * 0.02 + 0.01;
             this.oscillationAngle = Math.random() * Math.PI * 2;
             this.oscillationRange = Math.random() * 1.2 + 0.4;
@@ -823,7 +823,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.save();
             ctx.translate(this.x, this.y);
             ctx.rotate((this.rotation * Math.PI) / 180);
-            
+
             ctx.beginPath();
             ctx.ellipse(0, 0, this.size * 0.7, this.size, 0, 0, Math.PI * 2);
             ctx.fillStyle = this.color;
@@ -1032,7 +1032,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.addEventListener("scroll", updateButterflies);
         window.addEventListener("resize", updateButterflies);
-        
+
         // Trigger initial positioning so they don't start offscreen
         setTimeout(updateButterflies, 200);
         setTimeout(updateButterflies, 1500);
