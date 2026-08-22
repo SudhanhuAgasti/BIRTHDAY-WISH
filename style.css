@@ -506,28 +506,50 @@ body {
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    margin-top: 24px;
+    gap: 40px;
+    margin-top: 36px;
 }
 
 .photo-card {
     background: var(--warm-cream);
-    padding: 16px 16px 24px;
-    border-radius: var(--border-radius-large);
-    box-shadow: var(--neu-shadow-raised);
+    padding: 16px 16px 36px;
+    border-radius: 4px;
+    box-shadow: 0 10px 25px rgba(220, 185, 195, 0.35), 0 3px 10px rgba(0, 0, 0, 0.05);
     transition: var(--transition-smooth);
     cursor: pointer;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
+    transform: rotate(var(--random-rotation, 0deg));
+    border: 1px solid rgba(233, 139, 168, 0.15);
+}
+
+/* Washi tape effect on top of Polaroid */
+.photo-card::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 80px;
+    height: 24px;
+    background-color: rgba(233, 139, 168, 0.3); /* semi-transparent pink washi tape */
+    backdrop-filter: blur(1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    z-index: 5;
+}
+
+.photo-card:nth-child(even)::before {
+    transform: translateX(-50%) rotate(3deg);
+    background-color: rgba(200, 182, 232, 0.3); /* semi-transparent lavender washi tape */
 }
 
 .photo-frame {
     width: 100%;
-    border-radius: 16px;
+    border-radius: 2px;
     overflow: hidden;
-    background-color: rgba(0,0,0,0.03);
+    background-color: rgba(0,0,0,0.02);
     position: relative;
-    box-shadow: inset 3px 3px 6px rgba(0,0,0,0.05),
-                inset -3px -3px 6px rgba(255,255,255,0.7);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
 }
 
 .photo-card img {
@@ -539,24 +561,25 @@ body {
 
 .photo-caption {
     margin-top: 18px;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 1.2rem;
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.6rem;
     text-align: center;
     color: var(--deep-plum);
-    opacity: 0.9;
+    opacity: 0.95;
+    letter-spacing: 0.5px;
 }
 
 /* Photo card hover */
 @media (hover: hover) {
     .photo-card:hover {
-        transform: translateY(-8px) scale(1.01);
-        box-shadow: 16px 16px 35px rgba(190, 165, 180, 0.3), 
-                    -16px -16px 35px rgba(255, 255, 255, 0.95);
+        transform: rotate(0deg) scale(1.05) translateY(-12px) !important;
+        box-shadow: 0 20px 40px rgba(190, 165, 180, 0.5), 
+                    0 10px 20px rgba(0, 0, 0, 0.08);
+        z-index: 50;
     }
     
     .photo-card:hover img {
-        transform: scale(1.04);
+        transform: scale(1.03);
     }
 }
 
@@ -1585,5 +1608,27 @@ body {
 @keyframes flap-right {
     0%, 100% { transform: rotateY(0deg); }
     50% { transform: rotateY(-60deg); }
+}
+
+/* --- Cursor Trail & Tap Burst Particles --- */
+.trail-particle {
+    position: fixed;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    animation: fadeFloatUp 1.2s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+    text-shadow: 0 0 8px rgba(233, 139, 168, 0.6), 0 0 15px rgba(255, 255, 255, 0.5);
+    line-height: 1;
+}
+
+@keyframes fadeFloatUp {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) translateY(0) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.2) translateY(-100px) rotate(45deg);
+    }
 }
 

@@ -304,6 +304,10 @@ document.addEventListener("DOMContentLoaded", () => {
             card.className = "photo-card animate-view";
             card.dataset.index = idx;
 
+            // Generate a random rotation between -4 and +4 degrees for polaroid feel
+            const randomRot = (Math.random() * 8 - 4).toFixed(2);
+            card.style.setProperty('--random-rotation', `${randomRot}deg`);
+
             // Set image with fallback logic
             const frame = document.createElement("div");
             frame.className = "photo-frame";
@@ -338,6 +342,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Lightbox trigger on click
             card.addEventListener("click", () => openLightbox(idx));
+
+            // Apply 3D Tilt
+            apply3DTilt(card, 15);
         });
 
         // Load Reasons
@@ -350,6 +357,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="reason-text">${reason.text}</p>
             `;
             reasonsGrid.appendChild(card);
+            
+            // Apply 3D Tilt
+            apply3DTilt(card, 12);
         });
 
         // Load Timeline
@@ -375,6 +385,49 @@ document.addEventListener("DOMContentLoaded", () => {
             card.className = "wish-card animate-view";
             card.innerHTML = `<p class="wish-text">${wish}</p>`;
             wishesGrid.appendChild(card);
+
+            // Apply 3D Tilt
+            apply3DTilt(card, 10);
+        });
+    }
+
+    // 3D Tilt Effect function definition
+    function apply3DTilt(element, maxAngle = 12) {
+        if (window.innerWidth < 768) return; // Disable tilt on mobile for performance
+
+        element.style.transformStyle = "preserve-3d";
+        element.style.transition = "transform 0.1s ease, box-shadow 0.1s ease";
+
+        element.addEventListener("mousemove", (e) => {
+            const rect = element.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const normX = (x / rect.width) - 0.5;
+            const normY = (y / rect.height) - 0.5;
+
+            const rotX = -(normY * maxAngle).toFixed(2);
+            const rotY = (normX * maxAngle).toFixed(2);
+
+            const randomRot = element.style.getPropertyValue('--random-rotation') || "0deg";
+            
+            if (element.classList.contains("photo-card")) {
+                element.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.06, 1.06, 1.06) rotate(0deg)`;
+                element.style.zIndex = "50";
+            } else {
+                element.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.04, 1.04, 1.04)`;
+            }
+        });
+
+        element.addEventListener("mouseleave", () => {
+            element.style.transition = "transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.5s ease";
+            const randomRot = element.style.getPropertyValue('--random-rotation');
+            if (element.classList.contains("photo-card")) {
+                element.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) rotate(${randomRot || '0deg'})`;
+                element.style.zIndex = "";
+            } else {
+                element.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            }
         });
     }
 
@@ -724,6 +777,68 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Petal template - Falling Cherry Blossoms / Rose Petals
+    class Petal {
+        constructor() {
+            this.reset();
+            this.y = Math.random() * canvas.height;
+        }
+
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = -20;
+            this.size = Math.random() * 8 + 6;
+            this.speedY = Math.random() * 0.9 + 0.6; // gentle falling drift
+            this.speedX = Math.random() * 0.5 - 0.25;
+            this.opacity = Math.random() * 0.5 + 0.35;
+            
+            this.oscillationSpeed = Math.random() * 0.02 + 0.01;
+            this.oscillationAngle = Math.random() * Math.PI * 2;
+            this.oscillationRange = Math.random() * 1.2 + 0.4;
+
+            this.rotation = Math.random() * 360;
+            this.rotationSpeed = Math.random() * 1.5 - 0.75;
+
+            const colors = [
+                `rgba(255, 183, 197, ${this.opacity})`, // cherry blossom pink
+                `rgba(255, 105, 180, ${this.opacity})`, // hot rose pink
+                `rgba(248, 200, 220, ${this.opacity})`, // light blush
+                `rgba(219, 112, 147, ${this.opacity})`  // pale violet red
+            ];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        update() {
+            this.y += this.speedY;
+            this.oscillationAngle += this.oscillationSpeed;
+            this.x += Math.sin(this.oscillationAngle) * this.oscillationRange + this.speedX;
+            this.rotation += this.rotationSpeed;
+
+            if (this.y > canvas.height + 20 || this.x < -20 || this.x > canvas.width + 20) {
+                this.reset();
+            }
+        }
+
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate((this.rotation * Math.PI) / 180);
+            
+            ctx.beginPath();
+            ctx.ellipse(0, 0, this.size * 0.7, this.size, 0, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+
+            // Highlight shine
+            ctx.beginPath();
+            ctx.ellipse(-this.size * 0.2, -this.size * 0.2, this.size * 0.15, this.size * 0.3, Math.PI / 4, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * 0.65})`;
+            ctx.fill();
+
+            ctx.restore();
+        }
+    }
+
     // Confetti template
     class Confetti {
         constructor() {
@@ -786,9 +901,13 @@ document.addEventListener("DOMContentLoaded", () => {
         context.fill();
     }
 
-    // Populate backdrop particles
+    // Populate backdrop particles with a mix of rising balloons and falling petals
     for (let i = 0; i < maxParticles; i++) {
-        particles.push(new Particle());
+        if (i % 2 === 0) {
+            particles.push(new Particle());
+        } else {
+            particles.push(new Petal());
+        }
     }
 
     // Confetti Spawner Function
@@ -828,28 +947,44 @@ document.addEventListener("DOMContentLoaded", () => {
     animateParticles();
 
     // --------------------------------------------------
-    // 10. INTERACTIVE CURSOR TRAIL (Desktop Only)
+    // 10. INTERACTIVE CURSOR & TOUCH TRAIL
     // --------------------------------------------------
-    if (!isMobile) {
-        document.addEventListener("mousemove", (e) => {
-            // limit rate to avoid lagging DOM elements
-            if (Math.random() > 0.08) return;
+    const createTrail = (x, y) => {
+        const trail = document.createElement("div");
+        trail.className = "trail-particle";
+        const symbols = ["✨", "❤️", "🌸", "💖", "🌟", "🎈"];
+        trail.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+        trail.style.left = `${x}px`;
+        trail.style.top = `${y}px`;
+        trail.style.fontSize = `${Math.random() * 15 + 10}px`;
 
-            const trail = document.createElement("div");
-            trail.className = "trail-particle";
-            trail.innerHTML = Math.random() > 0.4 ? "✨" : "❤️";
-            trail.style.left = `${e.clientX}px`;
-            trail.style.top = `${e.clientY}px`;
-            trail.style.fontSize = `${Math.random() * 12 + 8}px`;
+        document.body.appendChild(trail);
 
-            document.body.appendChild(trail);
+        setTimeout(() => {
+            trail.remove();
+        }, 1200);
+    };
 
-            // CSS handles fade-away keyframes, remove element after animation completes
-            setTimeout(() => {
-                trail.remove();
-            }, 1200);
-        });
-    }
+    let lastTrailTime = 0;
+    const trailThrottle = 40; // millisecond throttle
+
+    const handleTrailMove = (clientX, clientY) => {
+        const now = Date.now();
+        if (now - lastTrailTime > trailThrottle) {
+            createTrail(clientX, clientY);
+            lastTrailTime = now;
+        }
+    };
+
+    document.addEventListener("mousemove", (e) => {
+        handleTrailMove(e.clientX, e.clientY);
+    });
+
+    document.addEventListener("touchmove", (e) => {
+        if (e.touches && e.touches[0]) {
+            handleTrailMove(e.touches[0].clientX, e.touches[0].clientY);
+        }
+    }, { passive: true });
 
     // --------------------------------------------------
     // 11. WAVY SCROLLING 3D BUTTERFLIES LOGIC (2 Butterflies)
