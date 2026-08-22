@@ -129,18 +129,18 @@ document.addEventListener("DOMContentLoaded", () => {
         // 2. Play audio loop
         playLoveSong();
 
-        // 3. Spawn rising smoke particles
+        // 3. Spawn rising smoke particles continuously for 2 seconds
         const candleRect = candle.getBoundingClientRect();
         const wickX = candleRect.left + candleRect.width / 2;
         const wickY = candleRect.top + 20;
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 16; i++) {
             setTimeout(() => {
                 createSmoke(wickX, wickY);
-            }, i * 150);
+            }, i * 125);
         }
 
-        // 4. Delay site entrance for cinematic timing
+        // 4. Delay site entrance for 2 seconds (cinematic smoke timing)
         setTimeout(() => {
             openingScreen.classList.add("fade-out");
             mainContent.classList.remove("hidden");
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 800);
 
             triggerConfetti(55);
-        }, 1300);
+        }, 2000);
     };
 
     function createSmoke(x, y) {
@@ -190,34 +190,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { once: true });
 
     if (candle) {
-        // Always enable tap/touch fallback from the start so she can always proceed
-        candle.addEventListener("click", blowOutCandle);
-        candle.addEventListener("touchstart", blowOutCandle);
+        // Initialize microphone detection only (tap fallback disabled)
         initMicrophoneBlowDetection();
-    }
-
-    // Fallback: click/tap anywhere on the opening screen to blow the candle and open
-    if (openingScreen) {
-        openingScreen.addEventListener("click", blowOutCandle);
-        openingScreen.addEventListener("touchstart", blowOutCandle);
     }
 
     function initMicrophoneBlowDetection() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            console.log("Microphone API not supported. Fallback to tap active.");
-            actionTitle.innerHTML = "Tap the flame to blow it out & make a wish... 🕯️✨";
+            console.log("Microphone API not supported.");
+            actionTitle.innerHTML = "Microphone access not supported. Please open in Chrome/Safari to blow out the candle! 🎙️";
             return;
         }
 
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
-                // Update instruction text to guide her to blow, mentioning tap fallback
-                actionTitle.innerHTML = "Blow into your mic to blow out the candle or tap the flame... 🕯️💨";
+                // Update instruction text to guide her to blow
+                actionTitle.innerHTML = "Blow into your mic to blow out the candle & make a wish... 🕯️💨";
 
                 // Show encouragement instruction if blowing doesn't succeed in 6 seconds
                 encouragementTimer = setTimeout(() => {
                     if (!isSurpriseOpened) {
-                        actionTitle.innerHTML = "Try blowing a bit harder, or just tap the flame to blow it out! 🕯️✨";
+                        actionTitle.innerHTML = "Blow a bit harder directly into your mic to blow out the flame! 🕯️💨";
                     }
                 }, 6000);
 
