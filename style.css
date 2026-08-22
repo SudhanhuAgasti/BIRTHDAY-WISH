@@ -1632,3 +1632,85 @@ body {
     }
 }
 
+/* ==========================================================================
+   📱 RESPONSIVE STYLES (MEDIA QUERIES)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* 1. Navigation Menu Mobile adaptation */
+    .nav-bar {
+        width: 92%;
+        top: 16px;
+        height: 56px;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 72px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.95);
+        width: 100%;
+        background: rgba(255, 248, 243, 0.95);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 16px;
+        border-radius: var(--border-radius-large);
+        box-shadow: var(--neu-shadow-raised);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0.4s;
+        z-index: 850;
+    }
+
+    .nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) scale(1);
+    }
+
+    .nav-link {
+        font-size: 0.95rem;
+        padding: 10px 20px;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Hamburger Active Animations */
+    .nav-toggle.active span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .nav-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .nav-toggle.active span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    /* 2. Hero Section Mobile adaptation */
+    .hero-section {
+        padding: 100px 16px 60px;
+    }
+
+    .hero-pulse-container {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 24px;
+    }
+
+    .pulsing-heart {
+        width: 44px;
+        height: 44px;
+    }
+
+    .scroll-down {
+        margin-top: 36px;
+    }
+}
+
