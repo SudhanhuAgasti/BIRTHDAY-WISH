@@ -285,13 +285,14 @@ body {
 
 /* Smoke puff simulation */
 .smoke {
-    position: absolute;
+    position: fixed;
     width: 6px;
     height: 6px;
-    background: rgba(230, 230, 230, 0.5);
+    background: rgba(230, 230, 230, 0.7); /* Slightly higher opacity for visibility */
     border-radius: 50%;
     pointer-events: none;
     animation: rise-smoke 1.6s forwards ease-out;
+    z-index: 1001; /* Render on top of opening screen (z-index 1000) */
 }
 
 @keyframes rise-smoke {
