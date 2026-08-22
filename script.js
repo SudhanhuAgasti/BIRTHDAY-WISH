@@ -997,6 +997,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
             const scrollPercent = documentHeight > 0 ? (window.scrollY / documentHeight) : 0;
 
+            const isMobile = window.innerWidth < 768;
+            const mobileScale = isMobile ? 0.6 : 1.0;
+
             // Butterfly 1 Coordinates
             const waveX1 = 12 + scrollPercent * 62 + Math.sin(scrollPercent * Math.PI * 5.5) * 10;
             const pathY1 = 8 + scrollPercent * 78;
@@ -1005,12 +1008,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const nextPercent1 = Math.min(1, scrollPercent + 0.005);
             const nextX1 = 12 + nextPercent1 * 62 + Math.sin(nextPercent1 * Math.PI * 5.5) * 10;
             const nextY1 = 8 + nextPercent1 * 78;
-            const angleDeg1 = Math.atan2(nextY1 - pathY1, nextX1 - waveX1) * (180 / Math.PI) - 90;
+            const angleDeg1 = Math.atan2(nextY1 - pathY1, nextX1 - waveX1) * (180 / Math.PI) + 90;
 
             if (butterfly1) {
                 butterfly1.style.left = `${waveX1}%`;
                 butterfly1.style.top = `${pathY1}%`;
-                butterfly1.style.transform = `rotate(${angleDeg1}deg)`;
+                butterfly1.style.transform = `rotate(${angleDeg1}deg) scale(${mobileScale})`;
             }
 
             // Butterfly 2 Coordinates (Opposite sine phase to make them cross paths!)
@@ -1021,12 +1024,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const nextPercent2 = Math.min(1, scrollPercent + 0.005);
             const nextX2 = 22 + nextPercent2 * 58 + Math.sin(nextPercent2 * Math.PI * 5.5 + Math.PI) * 14;
             const nextY2 = 14 + nextPercent2 * 72;
-            const angleDeg2 = Math.atan2(nextY2 - pathY2, nextX2 - waveX2) * (180 / Math.PI) - 90;
+            const angleDeg2 = Math.atan2(nextY2 - pathY2, nextX2 - waveX2) * (180 / Math.PI) + 90;
 
             if (butterfly2) {
                 butterfly2.style.left = `${waveX2}%`;
                 butterfly2.style.top = `${pathY2}%`;
-                butterfly2.style.transform = `rotate(${angleDeg2}deg) scale(0.8)`;
+                butterfly2.style.transform = `rotate(${angleDeg2}deg) scale(${mobileScale * 0.8})`;
             }
         };
 
