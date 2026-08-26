@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-romantic-bg: #050206;
+  --color-romantic-dark: #120516;
+  --color-romantic-burgundy: #2d0b25;
+  --color-romantic-rose: #ff2e93;
+  --color-romantic-lightRose: #ff75b5;
+  --color-romantic-gold: #ffd700;
+
+  --font-playfair: "Playfair Display", serif;
+  --font-inter: "Inter", sans-serif;
+  --font-dancing: "Dancing Script", cursive;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-romantic-bg);
+    color: white;
+    font-family: var(--font-inter);
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Glassmorphism Utilities */
+@utility glass {
+  background: rgba(18, 5, 22, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 46, 147, 0.15);
+}
+
+@utility glass-premium {
+  background: rgba(10, 3, 12, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 46, 147, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(255, 46, 147, 0.1);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050206;
+}
+::-webkit-scrollbar-thumb {
+  background: #ff2e93;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff75b5;
+}
+
+/* Custom styles for animations & cursor */
+.custom-cursor {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 46, 147, 0.8);
+  border-radius: 50%;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9999;
+  transition: width 0.2s, height 0.2s, background-color 0.2s;
+}
+
+.custom-cursor-dot {
+  width: 4px;
+  height: 4px;
+  background-color: #ff2e93;
+  border-radius: 50%;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(255, 46, 147, 0.5), 0 0 20px rgba(255, 46, 147, 0.3);
+}
+
+.text-glow-gold {
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.heart-beat {
+  animation: beat 1.2s infinite alternate;
+}
+
+@keyframes beat {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
