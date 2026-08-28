@@ -157,8 +157,8 @@ export default function Heart3D() {
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,11,37,0.4)_0%,transparent_70%)] pointer-events-none"></div>
 
-      <div className="absolute inset-0 z-0 cursor-pointer">
-        <Canvas camera={{ position: [0, 0, 4.5], fov: 50 }}>
+      <div className="absolute inset-0 z-0 cursor-pointer" style={{ touchAction: 'pan-y' }}>
+        <Canvas camera={{ position: [0, 0, 4.5], fov: 50 }} style={{ touchAction: 'pan-y' }}>
           <ambientLight intensity={0.4} />
           <pointLight position={[10, 10, 10]} intensity={1.5} color="#ff75b5" />
           <pointLight position={[-10, -10, -10]} intensity={0.5} color="#2d0b25" />

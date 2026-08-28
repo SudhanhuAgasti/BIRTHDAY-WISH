@@ -5,13 +5,13 @@ import { birthdayData } from '../data/birthdayData';
 
 export default function Hero({ onNext }) {
   return (
-    <section 
+    <section
       className="relative h-screen w-full flex flex-col justify-center items-center px-4 overflow-hidden z-10 select-none bg-cover bg-center"
       style={{ backgroundImage: "url('/bg-hero.jpg')" }}
     >
       {/* Dark overlay to make text highly readable */}
       <div className="absolute inset-0 bg-black/50 z-0 pointer-events-none"></div>
- 
+
       <div className="text-center max-w-4xl flex flex-col items-center gap-6 mt-[-10vh] relative z-10">
         {/* Animated Greeting */}
         <motion.div
@@ -33,7 +33,7 @@ export default function Hero({ onNext }) {
         >
           Happy Birthday,<br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-romantic-rose via-pink-400 to-romantic-lightRose">
-            My Love
+            BINI !!
           </span>
         </motion.h1>
 

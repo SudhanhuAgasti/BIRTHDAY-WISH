@@ -393,8 +393,8 @@ export default function BirthdayCake() {
       <div className={`absolute inset-0 transition-colors duration-1000 ${blownOut ? 'bg-[radial-gradient(circle_at_center,rgba(255,46,147,0.15)_0%,transparent_70%)]' : 'bg-[radial-gradient(circle_at_center,rgba(255,215,0,0.12)_0%,transparent_60%)]'} pointer-events-none`}></div>
 
       {/* Floating Sparkles around cake */}
-      <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 1.2, 3.2], fov: 50 }}>
+      <div className="absolute inset-0 z-0" style={{ touchAction: 'pan-y' }}>
+        <Canvas camera={{ position: [0, 1.2, 3.2], fov: 50 }} style={{ touchAction: 'pan-y' }}>
           <ambientLight intensity={blownOut ? 0.2 : 0.4} />
           {/* Spotlight for dramatic lighting */}
           <spotLight position={[0, 5, 2]} intensity={1.5} penumbra={0.5} color="#fff" castShadow />

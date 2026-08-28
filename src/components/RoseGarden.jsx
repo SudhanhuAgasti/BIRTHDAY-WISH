@@ -248,8 +248,8 @@ export default function RoseGarden() {
       </div>
 
       {/* R3F Rose Garden Canvas */}
-      <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 1.2, 4.5], fov: 55 }}>
+      <div className="absolute inset-0 z-0" style={{ touchAction: 'pan-y' }}>
+        <Canvas camera={{ position: [0, 1.2, 4.5], fov: 55 }} style={{ touchAction: 'pan-y' }}>
           {/* Fog */}
           <fog attach="fog" args={["#030105", 2, 10]} />
           

@@ -159,8 +159,8 @@ export default function Reasons() {
       </div>
 
       {/* Interactive 3D Constellation Layer */}
-      <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
+      <div className="absolute inset-0 z-0" style={{ touchAction: 'pan-y' }}>
+        <Canvas camera={{ position: [0, 0, 5], fov: 60 }} style={{ touchAction: 'pan-y' }}>
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} intensity={1.5} color="#ffd700" />
           

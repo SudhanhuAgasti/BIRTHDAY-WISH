@@ -167,8 +167,8 @@ export default function FinalScene() {
       <div className="absolute inset-0 bg-gradient-to-t from-romantic-bg via-transparent to-transparent pointer-events-none"></div>
 
       {/* 3D Canvas environment with Moon and Stars */}
-      <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 0, 4.5], fov: 60 }}>
+      <div className="absolute inset-0 z-0" style={{ touchAction: 'pan-y' }}>
+        <Canvas camera={{ position: [0, 0, 4.5], fov: 60 }} style={{ touchAction: 'pan-y' }}>
           <fog attach="fog" args={["#030105", 2, 8]} />
           <ambientLight intensity={0.25} />
           
