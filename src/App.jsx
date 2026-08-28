@@ -95,6 +95,40 @@ export default function App() {
         <MusicToggle isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
       )}
 
+      {/* Mobile Scroll Helper */}
+      {isMobile && !isLoading && (
+        <div 
+          className="fixed right-3 top-1/2 -translate-y-1/2 w-10 h-48 rounded-3xl bg-black/50 border border-romantic-rose/30 flex flex-col items-center justify-between py-4 z-[999] backdrop-blur-lg shadow-[0_0_20px_rgba(255,46,147,0.25)] pointer-events-auto active:scale-95 active:border-pink-500 transition-all duration-200"
+          style={{ touchAction: 'pan-y' }}
+        >
+          {/* Top arrow */}
+          <motion.div 
+            animate={{ y: [0, -4, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+            className="text-romantic-lightRose text-xs font-bold"
+          >
+            ▲
+          </motion.div>
+          
+          {/* Vertical scroll text */}
+          <span 
+            className="text-[8px] text-romantic-lightRose/80 font-bold uppercase tracking-widest select-none pointer-events-none"
+            style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+          >
+            Drag to Scroll
+          </span>
+
+          {/* Bottom arrow */}
+          <motion.div 
+            animate={{ y: [0, 4, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+            className="text-romantic-lightRose text-xs font-bold"
+          >
+            ▼
+          </motion.div>
+        </div>
+      )}
+
       {/* Main Pages Flow */}
       {isLoading ? (
         <LoadingScreen onEnter={handleEnterWorld} />
