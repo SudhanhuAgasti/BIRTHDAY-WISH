@@ -270,7 +270,7 @@ function CakeScene({ blownOut, isBlowing }) {
   );
 }
 
-export default function BirthdayCake() {
+export default function BirthdayCake({ onViewStateChange, onBlownOut }) {
   const [blownOut, setBlownOut] = useState(false);
   const [isBlowing, setIsBlowing] = useState(false);
   const [micPermission, setMicPermission] = useState('prompt'); // 'prompt', 'granted', 'denied'
@@ -283,6 +283,7 @@ export default function BirthdayCake() {
     setTimeout(() => {
       setBlownOut(true);
       setIsBlowing(false);
+      if (onBlownOut) onBlownOut();
     }, 800);
   };
 
@@ -294,6 +295,7 @@ export default function BirthdayCake() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsInView(entry.isIntersecting);
+        if (onViewStateChange) onViewStateChange(entry.isIntersecting);
       },
       { threshold: 0.15 } // Activate when 15% of the section is visible
     );

@@ -34,6 +34,8 @@ export default function App() {
   const heartRef = useRef(null);
 
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isCakeInView, setIsCakeInView] = useState(false);
+  const [isCakeBlown, setIsCakeBlown] = useState(false);
 
   // Framer Motion scroll indicator
   const { scrollYProgress } = useScroll();
@@ -100,9 +102,9 @@ export default function App() {
         />
       )}
 
-      {/* Music Toggle */}
+      {/* Music Toggle (Hides controls but manages audio loop state) */}
       {!isLoading && (
-        <MusicToggle isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
+        <MusicToggle isPlaying={isPlaying && !(isCakeInView && !isCakeBlown)} setIsPlaying={setIsPlaying} />
       )}
 
       {/* Mobile Scroll Helper */}
@@ -168,7 +170,10 @@ export default function App() {
           <MemoizedRoseGarden />
 
           {/* Birthday Cake Blowout */}
-          <MemoizedBirthdayCake />
+          <MemoizedBirthdayCake 
+            onViewStateChange={(inView) => setIsCakeInView(inView)}
+            onBlownOut={() => setIsCakeBlown(true)}
+          />
 
           {/* Handwritten Love Letter scroll */}
           <MemoizedLoveLetter />
