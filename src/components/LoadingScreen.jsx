@@ -31,8 +31,8 @@ export default function LoadingScreen({ onEnter }) {
     let audioContext;
     let analyser;
     let microphone;
-    let javascriptNode;
     let streamRef;
+    let animationFrameId;
 
     const startMic = async () => {
       try {
@@ -41,42 +41,43 @@ export default function LoadingScreen({ onEnter }) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
         microphone = audioContext.createMediaStreamSource(stream);
-        javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
         analyser.smoothingTimeConstant = 0.8;
         analyser.fftSize = 512;
-
         microphone.connect(analyser);
-        analyser.connect(javascriptNode);
-        javascriptNode.connect(audioContext.destination);
 
-        javascriptNode.onaudioprocess = () => {
-          const array = new Uint8Array(analyser.frequencyBinCount);
-          analyser.getByteFrequencyData(array);
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        const checkVolume = () => {
+          if (isBlown) return;
+          analyser.getByteFrequencyData(dataArray);
           let values = 0;
-
-          const length = array.length;
-          for (let i = 0; i < length; i++) {
-            values += array[i];
+          for (let i = 0; i < dataArray.length; i++) {
+            values += dataArray[i];
           }
-
-          const average = values / length;
-          // Threshold for blowing (air puff makes high frequency noise/volume)
+          const average = values / dataArray.length;
+          
           if (average > 50) {
             triggerBlowOut();
             cleanupMic();
+          } else {
+            animationFrameId = requestAnimationFrame(checkVolume);
           }
         };
+
+        checkVolume();
       } catch (err) {
-        console.log("Mic permission denied or not supported. Tap to blow enabled.", err);
+        console.log("Mic permission denied or not supported.", err);
       }
     };
 
     const cleanupMic = () => {
-      if (javascriptNode) javascriptNode.disconnect();
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       if (analyser) analyser.disconnect();
       if (microphone) microphone.disconnect();
-      if (audioContext) audioContext.close();
+      if (audioContext && audioContext.state !== 'closed') {
+        audioContext.close().catch(() => {});
+      }
       if (streamRef) {
         streamRef.getTracks().forEach(track => track.stop());
       }

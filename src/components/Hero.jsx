@@ -6,7 +6,7 @@ import { birthdayData } from '../data/birthdayData';
 export default function Hero({ onNext }) {
   return (
     <section
-      className="relative h-screen w-full flex flex-col justify-center items-center px-4 overflow-hidden z-10 select-none bg-cover bg-center"
+      className="relative h-screen w-full flex flex-col justify-start md:justify-end items-center px-4 pt-24 pb-16 md:pt-0 md:pb-24 overflow-hidden z-10 select-none bg-cover bg-center"
       style={{ backgroundImage: "url('/bg-hero.jpg')" }}
     >
       {/* Dark overlay to make text highly readable */}
@@ -20,7 +20,7 @@ export default function Hero({ onNext }) {
           transition={{ duration: 1.2, delay: 0.3 }}
         >
           <span className="text-sm font-semibold uppercase tracking-[0.3em] text-romantic-rose/80 font-inter text-glow">
-            For {birthdayData.girlfriendName} 🌙❤️
+            For YOU🌙 ❤️
           </span>
         </motion.div>
 
@@ -70,7 +70,7 @@ export default function Hero({ onNext }) {
             whileTap={{ scale: 0.95 }}
             className="px-8 py-3 rounded-full border border-romantic-rose/40 hover:border-romantic-rose/80 text-white bg-romantic-dark/50 backdrop-blur-md transition-all duration-300 flex items-center gap-2 group shadow-[0_0_15px_rgba(0,0,0,0.5)]"
           >
-            <span className="text-sm font-semibold tracking-widest uppercase">Begin Our Story</span>
+            <span className="text-sm font-semibold tracking-widest uppercase">Begin The  Story</span>
             <ChevronDown className="w-4 h-4 text-romantic-rose group-hover:translate-y-1 transition-transform duration-300" />
           </motion.button>
         </motion.div>

@@ -316,9 +316,9 @@ export default function BirthdayCake() {
     let audioContext = null;
     let analyser = null;
     let microphone = null;
-    let javascriptNode = null;
     let streamRef = null;
     let cooldownTimeout = null;
+    let animationFrameId = null;
 
     const initAudio = async () => {
       try {
@@ -329,15 +329,11 @@ export default function BirthdayCake() {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
         microphone = audioContext.createMediaStreamSource(stream);
-        
-        javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
         analyser.smoothingTimeConstant = 0.4;
         analyser.fftSize = 1024;
 
         microphone.connect(analyser);
-        analyser.connect(javascriptNode);
-        javascriptNode.connect(audioContext.destination);
 
         // Prevent instant trigger due to initial connection spike or ambient noise
         let isReady = false;
@@ -345,24 +341,29 @@ export default function BirthdayCake() {
           isReady = true;
         }, 1500);
 
-        javascriptNode.onaudioprocess = () => {
-          if (blownOut || !isReady) return;
-          const array = new Uint8Array(analyser.frequencyBinCount);
-          analyser.getByteFrequencyData(array);
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        const checkVolume = () => {
+          if (blownOut) return;
+          analyser.getByteFrequencyData(dataArray);
 
           // Calculate average of lower frequency bins (blowing creates low frequency rumble)
           let lowFreqSum = 0;
           const lowFreqBins = 15; // Focus on lowest frequencies (up to ~640Hz)
           for (let i = 0; i < lowFreqBins; i++) {
-            lowFreqSum += array[i];
+            lowFreqSum += dataArray[i];
           }
           const lowFreqAverage = lowFreqSum / lowFreqBins;
 
           // If low frequency energy is high, trigger the blow
-          if (lowFreqAverage > 80) {
+          if (isReady && lowFreqAverage > 80) {
             handleBlowRef.current();
+          } else {
+            animationFrameId = requestAnimationFrame(checkVolume);
           }
         };
+
+        checkVolume();
       } catch (err) {
         console.warn("Microphone access denied or not supported:", err);
         setMicPermission('denied');
@@ -375,14 +376,20 @@ export default function BirthdayCake() {
       if (cooldownTimeout) {
         clearTimeout(cooldownTimeout);
       }
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       if (streamRef) {
         streamRef.getTracks().forEach(track => track.stop());
       }
-      if (audioContext && audioContext.state !== 'closed') {
-        audioContext.close();
+      if (analyser) {
+        analyser.disconnect();
       }
-      if (javascriptNode) {
-        javascriptNode.disconnect();
+      if (microphone) {
+        microphone.disconnect();
+      }
+      if (audioContext && audioContext.state !== 'closed') {
+        audioContext.close().catch(() => {});
       }
     };
   }, [blownOut, isInView]);

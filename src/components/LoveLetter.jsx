@@ -51,26 +51,25 @@ export default function LoveLetter() {
       <AnimatePresence>
         {isOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-            {/* Fixed Close Button on viewport top-right to prevent scrolling away */}
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-6 right-6 p-2.5 rounded-full bg-black/40 hover:bg-romantic-rose text-white transition-colors duration-300 z-50 pointer-events-auto shadow-lg"
-              aria-label="Close Letter"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 50 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 50 }}
               transition={{ type: "spring", damping: 25, stiffness: 100 }}
-              className="relative w-full max-w-xl bg-[#faf6ee] text-neutral-800 p-8 md:p-12 rounded-2xl shadow-2xl border border-yellow-800/10 flex flex-col max-h-[85vh] overflow-y-auto"
+              className="relative w-full max-w-xl bg-[#faf6ee] text-neutral-800 p-8 pt-14 md:p-12 md:pt-16 rounded-2xl shadow-2xl border border-yellow-800/10 flex flex-col max-h-[85vh] overflow-y-auto"
               style={{
                 backgroundImage: "radial-gradient(ellipse at center, rgba(255,255,255,0.7), transparent), url('https://www.transparenttextures.com/patterns/cream-paper.png')",
                 boxShadow: "0 25px 50px -12px rgba(255, 46, 147, 0.25)"
               }}
             >
+              {/* Close Button inside the letter container */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-neutral-200 text-neutral-600 hover:text-romantic-rose transition-colors duration-300 z-50 pointer-events-auto"
+                aria-label="Close Letter"
+              >
+                <X className="w-5 h-5" />
+              </button>
               {/* Handwritten content */}
               <div className="font-dancing text-xl sm:text-2xl text-neutral-800 leading-relaxed font-semibold text-left select-text whitespace-pre-line pr-2">
                 {birthdayData.loveLetter}
