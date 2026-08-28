@@ -401,21 +401,23 @@ export default function BirthdayCake() {
 
       {/* Floating Sparkles around cake */}
       <div className="absolute inset-0 z-0" style={{ touchAction: 'pan-y' }}>
-        <Canvas camera={{ position: [0, 1.2, 3.2], fov: 50 }} style={{ touchAction: 'pan-y' }}>
-          <ambientLight intensity={blownOut ? 0.2 : 0.4} />
-          {/* Spotlight for dramatic lighting */}
-          <spotLight position={[0, 5, 2]} intensity={1.5} penumbra={0.5} color="#fff" castShadow />
-          <pointLight position={[3, 3, 3]} intensity={0.5} color="#ff2e93" />
-          
-          {!blownOut && <Sparkles count={15} scale={2} size={1} speed={0.4} color="#ffd700" />}
-          {blownOut && <Sparkles count={30} scale={4} size={1.8} speed={0.6} color="#ff2e93" />}
+        {isInView && (
+          <Canvas camera={{ position: [0, 1.2, 3.2], fov: 50 }} style={{ touchAction: 'pan-y' }}>
+            <ambientLight intensity={blownOut ? 0.2 : 0.4} />
+            {/* Spotlight for dramatic lighting */}
+            <spotLight position={[0, 5, 2]} intensity={1.5} penumbra={0.5} color="#fff" castShadow />
+            <pointLight position={[3, 3, 3]} intensity={0.5} color="#ff2e93" />
+            
+            {!blownOut && <Sparkles count={15} scale={2} size={1} speed={0.4} color="#ffd700" />}
+            {blownOut && <Sparkles count={30} scale={4} size={1.8} speed={0.6} color="#ff2e93" />}
 
-          <ResponsiveGroup baseWidth={2.8}>
-            <CakeScene blownOut={blownOut} isBlowing={isBlowing} />
-          </ResponsiveGroup>
+            <ResponsiveGroup baseWidth={2.8}>
+              <CakeScene blownOut={blownOut} isBlowing={isBlowing} />
+            </ResponsiveGroup>
 
-          <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 2 - 0.1} />
-        </Canvas>
+            <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 2 - 0.1} />
+          </Canvas>
+        )}
       </div>
 
       {/* Floating card panel */}

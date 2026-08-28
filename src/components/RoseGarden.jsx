@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
@@ -316,6 +316,19 @@ export default function RoseGarden() {
   const [activeMessage, setActiveMessage] = useState("");
   const [domeHovered, setDomeHovered] = useState(false);
   const [flashLight, setFlashLight] = useState(null);
+  const sectionRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+    }, { threshold: 0.05 });
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
 
   // 5 Interactive floating petals placement around the central rose inside the dome bounds
   const petalsData = useMemo(() => [
@@ -338,7 +351,7 @@ export default function RoseGarden() {
   };
 
   return (
-    <section className="relative h-screen w-full flex flex-col justify-center items-center px-4 bg-[#030105] border-t border-romantic-rose/10 overflow-hidden z-10">
+    <section ref={sectionRef} className="relative h-screen w-full flex flex-col justify-center items-center px-4 bg-[#030105] border-t border-romantic-rose/10 overflow-hidden z-10">
       {/* Subtle background fog gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#120516]/40 to-[#030105] pointer-events-none"></div>
 
@@ -352,7 +365,8 @@ export default function RoseGarden() {
 
       {/* R3F Canvas */}
       <div className="absolute inset-0 z-0" style={{ touchAction: 'pan-y' }}>
-        <Canvas camera={{ position: [0, 0.3, 3.8], fov: 45 }} style={{ touchAction: 'pan-y' }}>
+        {inView && (
+          <Canvas camera={{ position: [0, 0.3, 3.8], fov: 45 }} style={{ touchAction: 'pan-y' }}>
           {/* Fog */}
           <fog attach="fog" args={["#030105", 2, 8]} />
           
@@ -417,6 +431,7 @@ export default function RoseGarden() {
             minPolarAngle={Math.PI / 4}
           />
         </Canvas>
+      )}
       </div>
 
       {/* Premium Glass Message Card / Help UI */}

@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
@@ -143,6 +143,19 @@ function ParticleExplosion({ active, count = 120 }) {
 export default function Heart3D() {
   const [exploded, setExploded] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
+  const sectionRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+    }, { threshold: 0.05 });
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
 
   const handleHeartClick = () => {
     if (exploded) return;
@@ -153,25 +166,27 @@ export default function Heart3D() {
   };
 
   return (
-    <section className="relative h-screen w-full flex flex-col justify-center items-center px-4 bg-transparent overflow-hidden border-t border-romantic-rose/10">
+    <section ref={sectionRef} className="relative h-screen w-full flex flex-col justify-center items-center px-4 bg-transparent overflow-hidden border-t border-romantic-rose/10">
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,11,37,0.4)_0%,transparent_70%)] pointer-events-none"></div>
 
       <div className="absolute inset-0 z-0 cursor-pointer" style={{ touchAction: 'pan-y' }}>
-        <Canvas camera={{ position: [0, 0, 4.5], fov: 50 }} style={{ touchAction: 'pan-y' }}>
-          <ambientLight intensity={0.4} />
-          <pointLight position={[10, 10, 10]} intensity={1.5} color="#ff75b5" />
-          <pointLight position={[-10, -10, -10]} intensity={0.5} color="#2d0b25" />
-          <directionalLight position={[0, 5, 2]} intensity={1.2} color="#ffffff" />
-          
-          <Sparkles count={50} scale={5} size={2} speed={0.4} color="#ff2e93" />
-          
-          {!exploded && <HeartModel onClick={handleHeartClick} />}
-          
-          <ParticleExplosion active={exploded} />
-          
-          <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} />
-        </Canvas>
+        {inView && (
+          <Canvas camera={{ position: [0, 0, 4.5], fov: 50 }} style={{ touchAction: 'pan-y' }}>
+            <ambientLight intensity={0.4} />
+            <pointLight position={[10, 10, 10]} intensity={1.5} color="#ff75b5" />
+            <pointLight position={[-10, -10, -10]} intensity={0.5} color="#2d0b25" />
+            <directionalLight position={[0, 5, 2]} intensity={1.2} color="#ffffff" />
+            
+            <Sparkles count={50} scale={5} size={2} speed={0.4} color="#ff2e93" />
+            
+            {!exploded && <HeartModel onClick={handleHeartClick} />}
+            
+            <ParticleExplosion active={exploded} />
+            
+            <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} />
+          </Canvas>
+        )}
       </div>
 
       {/* Floating Instructions or Explosion Message */}

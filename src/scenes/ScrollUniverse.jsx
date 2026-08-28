@@ -523,6 +523,7 @@ function Butterfly({ id = 1, scrollProgress, mousePos }) {
 
 export default function ScrollUniverse({ scrollProgress, mousePos }) {
   const currentZIndex = 40; // Always keep zIndex high so butterflies render on top of the hero section photo
+  const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
   
   return (
     <div
@@ -537,7 +538,7 @@ export default function ScrollUniverse({ scrollProgress, mousePos }) {
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={1.5} color="#ff75b5" />
 
-        <Stars radius={100} depth={50} count={800} factor={4} saturation={0.5} fade speed={1.0} />
+        <Stars radius={100} depth={50} count={isMobileDevice ? 250 : 800} factor={4} saturation={0.5} fade speed={1.0} />
         <Butterfly id={1} scrollProgress={scrollProgress} mousePos={mousePos} />
         <Butterfly id={2} scrollProgress={scrollProgress} mousePos={mousePos} />
       </Canvas>
