@@ -143,9 +143,24 @@ function HeartFormingParticles({ count = 350, active, triggerExplosion }) {
 export default function FinalScene() {
   const [step, setStep] = useState(0); // 0: initial text sequence, 1: wait... one more thing, 2: clicked, final result
   const [activeParticles, setActiveParticles] = useState(false);
+  const [inView, setInView] = useState(false);
+  const sectionRef = useRef(null);
 
   useEffect(() => {
-    // Cinematic narrative message steps
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting);
+    }, { threshold: 0.15 });
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
+
+    // Cinematic narrative message steps - only trigger when user scrolls into the scene
     const timers = [
       setTimeout(() => setStep(1), 3500),  // Thank you for being part of my story
       setTimeout(() => setStep(2), 7000),  // I hope we create many more memories together
@@ -154,7 +169,7 @@ export default function FinalScene() {
     ];
 
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [inView]);
 
   const handleFinalClick = () => {
     setActiveParticles(true);
@@ -162,28 +177,30 @@ export default function FinalScene() {
   };
 
   return (
-    <section className="relative h-screen w-full flex flex-col justify-center items-center px-4 bg-[#030105] border-t border-romantic-rose/10 overflow-hidden z-10">
+    <section ref={sectionRef} className="relative h-screen w-full flex flex-col justify-center items-center px-4 bg-[#030105] border-t border-romantic-rose/10 overflow-hidden z-10">
       {/* Background vignette gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-romantic-bg via-transparent to-transparent pointer-events-none"></div>
 
       {/* 3D Canvas environment with Moon and Stars */}
       <div className="absolute inset-0 z-0" style={{ touchAction: 'pan-y' }}>
-        <Canvas camera={{ position: [0, 0, 4.5], fov: 60 }} style={{ touchAction: 'pan-y' }}>
-          <fog attach="fog" args={["#030105", 2, 8]} />
-          <ambientLight intensity={0.25} />
-          
-          <ResponsiveGroup baseWidth={4.0}>
-            <Moon />
+        {inView && (
+          <Canvas camera={{ position: [0, 0, 4.5], fov: 60 }} style={{ touchAction: 'pan-y' }}>
+            <fog attach="fog" args={["#030105", 2, 8]} />
+            <ambientLight intensity={0.25} />
             
-            <Stars radius={80} depth={40} count={600} factor={3} saturation={0.5} fade speed={1.2} />
-            <Sparkles count={40} scale={5} size={1.2} speed={0.4} color="#ff75b5" />
+            <ResponsiveGroup baseWidth={4.0}>
+              <Moon />
+              
+              <Stars radius={80} depth={40} count={600} factor={3} saturation={0.5} fade speed={1.2} />
+              <Sparkles count={40} scale={5} size={1.2} speed={0.4} color="#ff75b5" />
 
-            {/* Heart forming particle system */}
-            <HeartFormingParticles active={activeParticles} />
-          </ResponsiveGroup>
+              {/* Heart forming particle system */}
+              <HeartFormingParticles active={activeParticles} />
+            </ResponsiveGroup>
 
-          <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 2} />
-        </Canvas>
+            <OrbitControls enableZoom={false} enablePan={false} maxPolarAngle={Math.PI / 2} />
+          </Canvas>
+        )}
       </div>
 
       {/* Cinematic Text Sequences overlays */}

@@ -337,11 +337,11 @@ export default function BirthdayCake({ onViewStateChange, onBlownOut }) {
 
         microphone.connect(analyser);
 
-        // Prevent instant trigger due to initial connection spike or ambient noise
+        // Prevent instant trigger due to initial connection spike, ambient noise, or speaker music stopping
         let isReady = false;
         cooldownTimeout = setTimeout(() => {
           isReady = true;
-        }, 1500);
+        }, 2200);
 
         const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
@@ -349,16 +349,16 @@ export default function BirthdayCake({ onViewStateChange, onBlownOut }) {
           if (blownOut) return;
           analyser.getByteFrequencyData(dataArray);
 
-          // Calculate average of lower frequency bins (blowing creates low frequency rumble)
+          // Calculate average of lower frequency bins (blowing creates low frequency wind rumble, < 230Hz)
           let lowFreqSum = 0;
-          const lowFreqBins = 15; // Focus on lowest frequencies (up to ~640Hz)
+          const lowFreqBins = 5; // Focus strictly on lowest bass wind rumbles to ignore music/voice
           for (let i = 0; i < lowFreqBins; i++) {
             lowFreqSum += dataArray[i];
           }
           const lowFreqAverage = lowFreqSum / lowFreqBins;
 
-          // If low frequency energy is high, trigger the blow
-          if (isReady && lowFreqAverage > 80) {
+          // If low frequency energy is high (require intentional blow, > 140), trigger the blow
+          if (isReady && lowFreqAverage > 140) {
             handleBlowRef.current();
           } else {
             animationFrameId = requestAnimationFrame(checkVolume);
