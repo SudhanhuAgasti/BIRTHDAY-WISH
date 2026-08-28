@@ -111,6 +111,19 @@ function UniversalParticles({ count = 1000, scrollProgress }) {
   // Pre-generate target shapes
   const shapes = useMemo(() => generateShapePositions(count), [count]);
 
+  // Precompute sin and cos offsets to avoid expensive calls inside loop
+  const phaseCos = useMemo(() => {
+    const arr = new Float32Array(count);
+    for (let i = 0; i < count; i++) arr[i] = Math.cos(i);
+    return arr;
+  }, [count]);
+
+  const phaseSin = useMemo(() => {
+    const arr = new Float32Array(count);
+    for (let i = 0; i < count; i++) arr[i] = Math.sin(i);
+    return arr;
+  }, [count]);
+
   // Current active positions
   const currentPositions = useMemo(() => new Float32Array(count * 3), [count]);
 
@@ -147,18 +160,22 @@ function UniversalParticles({ count = 1000, scrollProgress }) {
     }
 
     const posAttr = pointsRef.current.geometry.attributes.position.array;
+    const time = state.clock.getElapsedTime() * 1.5;
+    const sinTime = Math.sin(time);
+    const cosTime = Math.cos(time);
 
     for (let i = 0; i < count; i++) {
       const idx = i * 3;
 
-      let targetX = THREE.MathUtils.lerp(fromShape[idx], toShape[idx], weight);
-      let targetY = THREE.MathUtils.lerp(fromShape[idx + 1], toShape[idx + 1], weight);
-      let targetZ = THREE.MathUtils.lerp(fromShape[idx + 2], toShape[idx + 2], weight);
+      let targetX = fromShape[idx] + (toShape[idx] - fromShape[idx]) * weight;
+      let targetY = fromShape[idx + 1] + (toShape[idx + 1] - fromShape[idx + 1]) * weight;
+      let targetZ = fromShape[idx + 2] + (toShape[idx + 2] - fromShape[idx + 2]) * weight;
 
       if (weight > 0.05 && weight < 0.95 && fromShape !== toShape) {
         const fallDist = Math.sin(weight * Math.PI) * (2.0 + (i % 10) * 0.2);
         targetY -= fallDist;
-        targetX += Math.sin(state.clock.getElapsedTime() * 1.5 + i) * 0.15;
+        // Optimization: sin(time + i) = sin(time)*cos(i) + cos(time)*sin(i)
+        targetX += (sinTime * phaseCos[i] + cosTime * phaseSin[i]) * 0.15;
       }
 
       posAttr[idx] += (targetX - posAttr[idx]) * 0.1;
@@ -195,6 +212,7 @@ function Butterfly({ id = 1, scrollProgress, mousePos }) {
   const leftWingRef = useRef();
   const rightWingRef = useRef();
   const tailMaterialRef = useRef();
+  const startTimeRef = useRef(null);
   
   const { width } = useThree().viewport;
   const responsiveScale = Math.min(width / 3.8, 1.0);
@@ -220,11 +238,14 @@ function Butterfly({ id = 1, scrollProgress, mousePos }) {
   useFrame((state) => {
     if (!groupRef.current) return;
 
-    const time = state.clock.getElapsedTime();
+    if (startTimeRef.current === null) {
+      startTimeRef.current = state.clock.getElapsedTime();
+    }
+    const time = state.clock.getElapsedTime() - startTimeRef.current;
     const isMoving = scrollProgress > 0.01;
 
-    // 1. Assembly Animation (duration 2.2 seconds)
-    const assemblyDuration = 2.2;
+    // 1. Assembly Animation (duration 3.5 seconds for higher visibility)
+    const assemblyDuration = 3.5;
     const progress = Math.min(time / assemblyDuration, 1.0);
     const easeProgress = 1 - Math.pow(1 - progress, 3); // Cubic ease out
 
@@ -340,10 +361,10 @@ function Butterfly({ id = 1, scrollProgress, mousePos }) {
       targetY += Math.cos(time * 2.5 + phaseShift) * 0.08;
     }
 
-    // Smoothly lerp towards target positions
-    groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.1;
-    groupRef.current.position.y += (targetY - groupRef.current.position.y) * 0.1;
-    groupRef.current.position.z += (targetZ - groupRef.current.position.z) * 0.1;
+    // Smoothly lerp towards target positions (slowed down from 0.1 to 0.025 for a graceful, floaty drift)
+    groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.025;
+    groupRef.current.position.y += (targetY - groupRef.current.position.y) * 0.025;
+    groupRef.current.position.z += (targetZ - groupRef.current.position.z) * 0.025;
 
     // Rotation angles matching flight heading - head rotated 180 deg (Math.PI) to face downwards and slanted inwards towards each other
     const dx = targetX - groupRef.current.position.x;
@@ -501,7 +522,7 @@ function Butterfly({ id = 1, scrollProgress, mousePos }) {
 }
 
 export default function ScrollUniverse({ scrollProgress, mousePos }) {
-  const currentZIndex = scrollProgress < 0.15 ? 1 : 40;
+  const currentZIndex = 40; // Always keep zIndex high so butterflies render on top of the hero section photo
   
   return (
     <div

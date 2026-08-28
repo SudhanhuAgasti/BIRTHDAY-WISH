@@ -14,6 +14,16 @@ import LoveLetter from './components/LoveLetter';
 import FinalScene from './components/FinalScene';
 import ScrollUniverse from './scenes/ScrollUniverse';
 
+// Memoized Components to prevent scrolling performance lag
+const MemoizedHero = React.memo(Hero);
+const MemoizedHeart3D = React.memo(Heart3D);
+const MemoizedMemories = React.memo(Memories);
+const MemoizedReasons = React.memo(Reasons);
+const MemoizedRoseGarden = React.memo(RoseGarden);
+const MemoizedBirthdayCake = React.memo(BirthdayCake);
+const MemoizedLoveLetter = React.memo(LoveLetter);
+const MemoizedFinalScene = React.memo(FinalScene);
+
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -140,31 +150,31 @@ export default function App() {
           <div className="w-full flex flex-col relative z-10">
           {/* Hero Section */}
           <div ref={heroRef} className="h-screen w-full relative">
-            <Hero onNext={() => scrollToSection(heartRef)} />
+            <MemoizedHero onNext={() => scrollToSection(heartRef)} />
           </div>
 
           {/* Interactive Heart Section */}
           <div ref={heartRef}>
-            <Heart3D />
+            <MemoizedHeart3D />
           </div>
 
           {/* Memories Polaroid gallery */}
-          <Memories />
+          <MemoizedMemories />
 
           {/* Connected Constellations Reasons */}
-          <Reasons />
+          <MemoizedReasons />
 
           {/* Rose Garden scene */}
-          <RoseGarden />
+          <MemoizedRoseGarden />
 
           {/* Birthday Cake Blowout */}
-          <BirthdayCake />
+          <MemoizedBirthdayCake />
 
           {/* Handwritten Love Letter scroll */}
-          <LoveLetter />
+          <MemoizedLoveLetter />
 
           {/* Cinematic Night Finale Scene */}
-          <FinalScene />
+          <MemoizedFinalScene />
           </div>
         </div>
       )}
