@@ -56,29 +56,33 @@ export default function LoveLetter() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 50 }}
               transition={{ type: "spring", damping: 25, stiffness: 100 }}
-              className="relative w-full max-w-xl bg-[#faf6ee] text-neutral-800 p-8 pt-14 md:p-12 md:pt-16 rounded-2xl shadow-2xl border border-yellow-800/10 flex flex-col max-h-[85vh] overflow-y-auto"
+              className="relative w-full max-w-xl bg-[#faf6ee] text-neutral-800 rounded-2xl shadow-2xl border border-yellow-800/10 flex flex-col max-h-[85vh] overflow-hidden"
               style={{
                 backgroundImage: "radial-gradient(ellipse at center, rgba(255,255,255,0.7), transparent), url('https://www.transparenttextures.com/patterns/cream-paper.png')",
                 boxShadow: "0 25px 50px -12px rgba(255, 46, 147, 0.25)"
               }}
             >
-              {/* Close Button inside the letter container */}
+              {/* Close Button inside the letter container (non-scrolling) */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-neutral-200 text-neutral-600 hover:text-romantic-rose transition-colors duration-300 z-50 pointer-events-auto"
+                className="absolute top-4 right-4 p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-romantic-rose transition-colors duration-300 z-50 pointer-events-auto shadow-sm"
                 aria-label="Close Letter"
               >
                 <X className="w-5 h-5" />
               </button>
-              {/* Handwritten content */}
-              <div className="font-dancing text-xl sm:text-2xl text-neutral-800 leading-relaxed font-semibold text-left select-text whitespace-pre-line pr-2">
-                {birthdayData.loveLetter}
-              </div>
 
-              {/* Decorative signature mark */}
-              <div className="mt-8 pt-4 border-t border-yellow-800/10 flex justify-between items-center font-dancing italic text-neutral-500 text-sm">
-                <span>With all my love, forever.</span>
-                <span className="text-romantic-rose text-lg">❤️</span>
+              {/* Scrollable Container for content */}
+              <div className="overflow-y-auto flex-1 p-8 pt-14 md:p-12 md:pt-16 pr-6">
+                {/* Handwritten content */}
+                <div className="font-dancing text-xl sm:text-2xl text-neutral-800 leading-relaxed font-semibold text-left select-text whitespace-pre-line pr-2">
+                  {birthdayData.loveLetter}
+                </div>
+
+                {/* Decorative signature mark */}
+                <div className="mt-8 pt-4 border-t border-yellow-800/10 flex justify-between items-center font-dancing italic text-neutral-500 text-sm">
+                  <span>With all my love, forever.</span>
+                  <span className="text-romantic-rose text-lg">❤️</span>
+                </div>
               </div>
             </motion.div>
           </div>

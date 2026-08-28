@@ -24,14 +24,14 @@ export const birthdayData = {
       description: "In the quiet moments, sitting next to you, I realize how incredibly lucky I am to have you in my life."
     },
     {
-      title: "Adventuring Together",
-      date: "Our Little Journeys",
+      title: "Everyday Magic",
+      date: "Making Ordinary Special",
       image: "/images/photo4.jpg",
       description: "Exploring the world with you makes every destination beautiful. Every path is an adventure when we hold hands."
     },
     {
-      title: "Everyday Magic",
-      date: "Making Ordinary Special",
+      title: "Adventuring Together",
+      date: "Our Little Journeys ",
       image: "/images/photo5.jpg",
       description: "You turn simple coffee dates and long walks into memories that I will cherish forever."
     },

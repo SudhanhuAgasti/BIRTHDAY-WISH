@@ -31,7 +31,7 @@ export default function Hero({ onNext }) {
           transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
           className="text-4xl sm:text-6xl md:text-8xl font-playfair font-bold text-white tracking-wide text-glow leading-tight"
         >
-          Happy Birthday,<br />
+          Happy Birthday <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-romantic-rose via-pink-400 to-romantic-lightRose">
             BINI !!
           </span>
